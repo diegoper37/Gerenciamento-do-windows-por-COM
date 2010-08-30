@@ -351,3 +351,4 @@ echo ($retorno[0])? $retorno[1] : 'Erro: '.$retorno[1]; echo '<br>';*/
 echo ($retorno[0])? $retorno[1] : 'Erro: '.$retorno[1]; echo '<br>';
 $retorno = $Admin -> remFolder('C:\novaPasta');
 echo ($retorno[0])? $retorno[1] : 'Erro: '.$retorno[1];*/
+?>
