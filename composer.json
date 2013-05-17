@@ -13,5 +13,6 @@
 		"psr-0" : {
 			"Gerencia" : "src"
 		}
-	}
+	},
+	"minimum-stability" : "dev"
 }
