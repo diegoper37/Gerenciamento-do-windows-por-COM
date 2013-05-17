@@ -1,23 +1,18 @@
 {
 	"name" : "diegopimentel/GerenciaWindows",
 	"description" : "Gerencia de Windows",
-	"type" : "library",
-	"keywords" : ["gerencia", "windows"],
+	"type" : "git",
+	"keywords" : [],
 	"license" : [
 		"AGPL-3.0"
 	],
 	"require" : {
-		"php" : ">=5.3.3"
+		"php" : ">=5.3"
 	},
 	"autoload" : {
 		"psr-0" : {
 			"Gerencia" : "src"
 		}
 	},
-	"minimum-stability" : "dev",
-	"extra": {
-        "branch-alias": {
-            "master": "1.0"
-        }
-    }
+	"minimum-stability" : "dev"
 }
