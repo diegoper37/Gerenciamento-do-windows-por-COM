@@ -1,0 +1,12 @@
+{
+	"name" : "diegopimentel/GerenciaWindows",
+	"description" : "Gerencia de Windows",
+	"type" : "git",
+	"keywords" : [],
+	"license" : [
+		"AGPL-3.0"
+	],
+	"require" : {
+		"php" : ">=5.3"
+	}
+}

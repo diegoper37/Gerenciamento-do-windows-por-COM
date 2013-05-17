@@ -1,4 +1,5 @@
 <?php
+Namespace Gerencia\Windows;
 /**
 *	Classe para gerenciamento do windows.
 *	Created on 29/07/2008
@@ -12,34 +13,34 @@ class  ServerAdminWin
 	/**
 	 * Nome do computador.
 	 * @access public
-	 */	
-	public $computer = '';	
-	
+	 */
+	public $computer = '';
+
 	/**
 	 * Objeto COM do windows.
 	 * @access public
-	 */	
-	public $win = '';	
-			
+	 */
+	public $win = '';
+
 	// __construct() {{{
 
-	/** 
+	/**
 	* Construtor que seleciona o nome do servidor onde sera adinistrado o WMS
 	*
 	* @access public
-	*/	
-	public function __construct() 
+	*/
+	public function __construct()
 	{
 		$this -> win = new COM('winmgmts:\\\\.\root\cimv2');
 		$network = new COM('WScript.Network');
-		$this -> computer = $network -> ComputerName;		
+		$this -> computer = $network -> ComputerName;
 	}
 
 
 	// alterPass() {{{
-	/** 
+	/**
 	* Altera senha do usuario
-	* 
+	*
 	* Example:
 	* <code>
 	* require_once 'class.ServerAdminWin.php'
@@ -49,7 +50,7 @@ class  ServerAdminWin
 	* 	'senha' => '102030'
 	* ));
 	*
-	* echo ($retorno[0])? $retorno[1] : 'Erro: '.$retorno[1];	
+	* echo ($retorno[0])? $retorno[1] : 'Erro: '.$retorno[1];
 	*
 	* </code>
 	*
@@ -57,7 +58,7 @@ class  ServerAdminWin
 	*
 	* @return array
 	* @access public
-	*/	
+	*/
 	public function alterPass( array $params=array() )
 	{
 		if(strtolower($params['name']) == 'administrador' || strtolower($params['name']) == 'administrator')
@@ -68,30 +69,30 @@ class  ServerAdminWin
 		{
 			$usuario = $params['name'];
 			$senha = $params['pass'];
-			$users = $this -> win -> ExecQuery('SELECT * FROM Win32_UserAccount');	
+			$users = $this -> win -> ExecQuery('SELECT * FROM Win32_UserAccount');
 			foreach($users as $user)
 			{
 				if($user -> Name == $usuario)
-				{		
-	
+				{
+
 						$usr = new COM("WinNT://".$this->computer."/".$usuario.",user") ;
 						$usr -> SetPassword ($senha);
 						$usr -> SetInfo();
-						return array( true , 'Usuario alterado com sucesso');				
+						return array( true , 'Usuario alterado com sucesso');
 				}
 			}
-			return array(false , 'Usuario não encontrado');
-		}catch(com_exception $e) 
+			return array(false , 'Usuario nï¿½o encontrado');
+		}catch(com_exception $e)
 		{
 			return array(false ,  $e->getMessage());
-		}			
+		}
 	}
-	// }}}	
-	
+	// }}}
+
 	// addUser() {{{
-	/** 
+	/**
 	* Adiciona usuario no servidor
-	* 
+	*
 	* Example:
 	* <code>
 	* require_once 'class.ServerAdminWin.php'
@@ -109,14 +110,14 @@ class  ServerAdminWin
 	*
 	* @return array
 	* @access public
-	*/	
+	*/
 	public function addUser( array $params=array() )
 	{
 		if(strtolower($params['name']) == 'administrador' || strtolower($params['name']) == 'administrator')
 		{
 			return array(false , 'Nao permitido adicionar usuario administrador!');
 		}
-		
+
 		if(!preg_match('/^([a-zA-Z0-9.\-_+$@])*$/' ,$params['name']))
 		{
 			return array( false , 'Nome com caracteres invalidos!');
@@ -126,26 +127,26 @@ class  ServerAdminWin
 		{
 			return array( false , 'Senha com caracteres invalidos!');
 		}
-	
+
 		$usuario = substr(preg_replace('/([^a-zA-Z0-9])/','',$params['name']), 0, 20);
 		try
 		{
 			$usuario = $params['name'];
-			$senha = $params['pass'];	
-			$users = $this -> win -> ExecQuery('SELECT * FROM Win32_UserAccount');			
+			$senha = $params['pass'];
+			$users = $this -> win -> ExecQuery('SELECT * FROM Win32_UserAccount');
 			foreach($users as $user)
 			{
 				if($user -> Name == $usuario)
 				{
-					return array( false , 'Usuario já cadastrado, solicite outro nome para o mesmo');
+					return array( false , 'Usuario jï¿½ cadastrado, solicite outro nome para o mesmo');
 				}
 			}
 			$cont = new COM('WinNT://'.$this -> computer.',computer');
 			$oUser = $cont -> Create('user', $usuario);
 			$oUser -> Put( "Fullname", $usuario.' Streaming' );
-			$oUser -> Put( "Description", $usuario.' Streaming' );			
-			$oUser -> SetPassword ($senha);			
-			$oUser -> SetInfo();	
+			$oUser -> Put( "Description", $usuario.' Streaming' );
+			$oUser -> SetPassword ($senha);
+			$oUser -> SetInfo();
 			$win = new COM('WinNT://'.$this -> computer.'/'.$usuario.',User');
 			if($win -> Get('UserFlags') != 66113)
 			{
@@ -161,11 +162,11 @@ class  ServerAdminWin
 			return array( false , $e->getMessage() );
 		}
 	}
-	
+
 	// addUserGroup() {{{
-	/** 
+	/**
 	* Adiciona usuario no grupo especificado
-	* 
+	*
 	* Example:
 	* <code>
 	* require_once 'class.ServerAdminWin.php'
@@ -183,7 +184,7 @@ class  ServerAdminWin
 	*
 	* @return array
 	* @access public
-	*/		
+	*/
 	public function addUserGroup( array $params=array() )
 	{
 		try
@@ -197,11 +198,11 @@ class  ServerAdminWin
 		}
 	}
 	// }}}
-	
+
 	// remUser() {{{
-	/** 
+	/**
 	* Remove usuario do windows
-	* 
+	*
 	* Example:
 	* <code>
 	* require_once 'class.ServerAdminWin.php'
@@ -223,7 +224,7 @@ class  ServerAdminWin
 		}
 		try
 		{
-			$users = $this -> win -> ExecQuery('SELECT * FROM Win32_UserAccount');	
+			$users = $this -> win -> ExecQuery('SELECT * FROM Win32_UserAccount');
 			foreach($users as $user)
 			{
 				if($user -> Name == $usuario)
@@ -233,18 +234,18 @@ class  ServerAdminWin
 					return array( true , 'Usuario excluido com sucesso');
 				}
 			}
-			return array(false , 'Usuario não encontrado');
+			return array(false , 'Usuario nï¿½o encontrado');
 		}catch(com_exception $e)
 		{
 			return array( false , $e->getMessage() );
-		}		
+		}
 	}
 	// }}}
-	
+
 	// createFolder() {{{
-	/** 
+	/**
 	* Cria Pasta no Windows
-	* 
+	*
 	* Example:
 	* <code>
 	* require_once 'class.ServerAdminWin.php'
@@ -271,11 +272,11 @@ class  ServerAdminWin
 		}
 	}
 	// }}}
-		
+
 	// remFolder() {{{
-	/** 
+	/**
 	* Remove Pasta no Windows
-	* 
+	*
 	* Example:
 	* <code>
 	* require_once 'class.ServerAdminWin.php'
@@ -302,11 +303,11 @@ class  ServerAdminWin
 		}
 	}
 	// }}}
-	
+
 	// accessRootFolder() {{{
-	/** 
+	/**
 	* Seta permissao total de usuario na pasta inforamada
-	* 
+	*
 	* Example:
 	* <code>
 	* require_once 'class.ServerAdminWin.php'
@@ -322,7 +323,7 @@ class  ServerAdminWin
 	*
 	* @return array
 	* @access public
-	*/		
+	*/
 	public function accessRootFolder( array $params=array() )
 	{
 		if(exec("C:\\WINDOWS\\system32\\cacls.exe ".$params['path']." /T /E /G ".$params['name'].":F"))
@@ -331,7 +332,7 @@ class  ServerAdminWin
 		}
 		return array( false , $e->getMessage());
 	}
-	// }}}	
+	// }}}
 }
 
 //$Admin = new ServerAdminWin();
